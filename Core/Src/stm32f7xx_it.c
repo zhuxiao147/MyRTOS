@@ -176,8 +176,8 @@ __attribute__((naked,noreturn)) void PendSV_Handler(void)
     "ldr     r1, =currentTask \n"
     "ldr     r2, [r1] \n"
     "str     r0, [r2] \n"
-    "bl      scheduler \n"
 
+    "bl      scheduler \n"
     "mov r14, 0xFFFFFFFD \n" // 设置返回到线程模式，使用 PSP
 
     "ldr     r1, =currentTask \n"

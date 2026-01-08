@@ -54,34 +54,32 @@ void task_init(TaskFunction task_func)
 
 void scheduler(void) {
     int8_t biggercount = 0;
-    if (taskCount == 0) {
+    if (taskCount == 0) 
+    {
         return; // 没有任务可运行
     }
 
     // 简单的轮询调度
-    for (int i = 0; i < taskCount; i++) {
+    for (int i = 0; i < taskCount; i++) 
+    {
         if (taskList[i].state == TASK_READY)
         {
-            if(taskList[i].count >= biggercount) {
+            if(taskList[i].count >= biggercount) 
+            {
                 biggercount = taskList[i].count;
                 nextTask = &taskList[i];
             }
-            else
-            {         
-                taskList[i].count++; // 增加时间片计数  
-            }
+            taskList[i].count++; // 增加调度计数  
         }
-
     }
     currentTask->state = TASK_READY;
-    currentTask->count = 0; // 重置当前任务的时间片计数
+    currentTask->count = 0; // 重置当前任务的调度计数
 
     nextTask->state = TASK_RUNNING;
-    nextTask->count = 0; // 重置下一个任务的时间片计数
+    nextTask->count = 0; // 重置下一个任务的调度计数
     nextTask->time_slice = TIME_SLICE_DEFAULT; // 重置时间片计数器
     currentTask = nextTask;
 }
-
 
 void os_start(void)
 {
