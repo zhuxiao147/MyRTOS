@@ -70,7 +70,7 @@ __attribute__((noreturn)) void task1(void) {
         loop++;
         sprintf((char *)msg, "task1 is running, loop=%d\n", loop);
         HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
-        HAL_Delay(500);
+        HAL_Delay(1000);
     }
 }
 
@@ -80,6 +80,17 @@ __attribute__((noreturn)) void task2(void) {
     while(1) {
         loop++;
         sprintf((char *)msg, "task2 is running, loop=%d\n", loop);
+        HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
+        HAL_Delay(1000);
+    }
+}
+
+__attribute__((noreturn)) void task3(void) {
+    int loop = 0;
+    unsigned char msg[50];
+    while(1) {
+        loop++;
+        sprintf((char *)msg, "task3 is running, loop=%d\n", loop);
         HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
         HAL_Delay(1000);
     }
@@ -124,6 +135,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   task_init(task1);
   task_init(task2);
+  task_init(task3);
 	HAL_TIM_Base_Start_IT(&htim2); // Start TIM2 with interrupt
   os_start();
 
