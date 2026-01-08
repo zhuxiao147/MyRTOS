@@ -22,6 +22,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "myrtos.h"
+#include "sem.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -61,15 +62,18 @@ static void MX_TIM2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+Semaphore sem_test;
 // task1  task2
 __attribute__((noreturn)) void task1(void) {
-  int loop = 0;
-  unsigned char msg[50];
+    int loop = 0;
+    unsigned char msg[50];
+    sem_init(&sem_test, 1); // 初始化信号量，初始值为1
     while(1) {
         loop++;
-        sprintf((char *)msg, "task1 is running, loop=%d\n", loop);
+        sem_wait(&sem_test); // P操作，等待信号量
+        sprintf((char *)msg, "task1 acquired semaphore, loop=%d\n", loop);
         HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
+        sem_post(&sem_test); // V操作，释放信号量
         HAL_Delay(1000);
     }
 }
@@ -79,8 +83,10 @@ __attribute__((noreturn)) void task2(void) {
     unsigned char msg[50];
     while(1) {
         loop++;
-        sprintf((char *)msg, "task2 is running, loop=%d\n", loop);
+        sem_wait(&sem_test); // P操作，等待信号量
+        sprintf((char *)msg, "task2 acquired semaphore, loop=%d\n", loop);
         HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
+        sem_post(&sem_test); // V操作，释放信号量
         HAL_Delay(1000);
     }
 }
@@ -90,8 +96,10 @@ __attribute__((noreturn)) void task3(void) {
     unsigned char msg[50];
     while(1) {
         loop++;
-        sprintf((char *)msg, "task3 is running, loop=%d\n", loop);
+        sem_wait(&sem_test); // P操作，等待信号量
+        sprintf((char *)msg, "task3 acquired semaphore, loop=%d\n", loop);
         HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
+        sem_post(&sem_test); // V操作，释放信号量
         HAL_Delay(1000);
     }
 }
