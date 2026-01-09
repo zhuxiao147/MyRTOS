@@ -1,7 +1,7 @@
 #include "sem.h"
 
 // 初始化信号量
-void sem_init(Semaphore *sem, int value)
+void sem_init(Semaphore *sem, int32_t value)
 {
     __disable_irq(); 
     sem->value = value;
@@ -29,7 +29,7 @@ void sem_post(Semaphore *sem)
 }
 
 // 获取信号量的当前值
-int sem_get_value(Semaphore *sem)
+int32_t sem_get_value(Semaphore *sem)
 {
     return sem->value;
 }
