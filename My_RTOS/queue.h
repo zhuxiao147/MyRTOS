@@ -2,16 +2,15 @@
 #define QUEUE_H
 
 #include <stdint.h>
-#include "port.h"
 
 #define QUEUE_SIZE 5
 #define MESSAGE_SIZE 32
 
-// 消息队列结构
+// 消息队列结构 (Message queue structure)
 typedef struct {
-    char data[QUEUE_SIZE][MESSAGE_SIZE];  // 消息存储区
-    int head;  // 队头
-    int tail;   // 队尾
+    char data[QUEUE_SIZE][MESSAGE_SIZE];  // 消息存储区 (Message storage area)
+    int head;  // 队头 (Queue head)
+    int tail;   // 队尾 (Queue tail)
 } MessageQueue;
 
 void queue_init(MessageQueue *queue);
