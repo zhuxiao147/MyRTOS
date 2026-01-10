@@ -210,6 +210,7 @@ void SysTick_Handler(void)
       if (--task->delay_ticks == 0)
       {
         task->state = TASK_READY;
+        
       }
     }
   }

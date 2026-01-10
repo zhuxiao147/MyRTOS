@@ -19,7 +19,19 @@ __attribute__((naked,noreturn)) void switch_to_psp(uint32_t* psp)
     );
 }
 
-void task_init(TaskFunction task_func)
+void switch_to_task(TaskControlBlock *tcb) {
+    switch_to_psp((uint32_t*)(tcb->stackPointer));  // 切换到指定任务的栈 (Switch to specified task's stack)
+}
+
+void static idle_task(void)
+{
+    while (1)
+    {
+        HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI); 
+    }
+}
+
+void task_init(TaskFunction task_func, uint8_t priority, uint32_t time_slice)
 {
     if (taskCount >= MAX_TASKS)
     {
@@ -49,36 +61,41 @@ void task_init(TaskFunction task_func)
     // 任务状态设置为就绪 (Set task state to ready)
     taskList[taskCount].state = TASK_READY;
     taskList[taskCount].count = 0; // 初始化调度计数器 (Initialize schedule counter)
-    taskList[taskCount].time_slice = TIME_SLICE_DEFAULT; // 初始化时间片计数器 (Initialize time slice counter)
+    taskList[taskCount].priority = priority; // 设置任务优先级 (Set task priority)
+    taskList[taskCount].time_slice = time_slice; // 初始化时间片计数器 (Initialize time slice counter)
+    taskList[taskCount].time_slice_set = time_slice; // 设置时间片长度 (Set time slice length)
     taskList[taskCount].delay_ticks = 0; // 初始化延时计数器 (Initialize delay counter)
     taskCount++;
 } 
 
 void scheduler(void) {
-    int32_t biggercount = 0;
+    int32_t count = 0;
+    uint8_t priority = PRIORITY_IDLE;
     if (taskCount == 0) 
     {
         return; // 没有任务可运行 (No task to run)
     }
 
     nextTask = 0;
-    do
+
+    for (int i = 0; i < taskCount; i++) 
     {
-        for (int i = 0; i < taskCount; i++) 
+        if (taskList[i].state == TASK_READY)
         {
-            if (taskList[i].state == TASK_READY)
+            if(taskList[i].count >= count && taskList[i].priority >= priority) 
             {
-                if(taskList[i].count >= biggercount) 
-                {
-                    biggercount = taskList[i].count;
-                    nextTask = &taskList[i];
-                }
-                taskList[i].count++; // 增加调度计数  (Increase schedule counter)
+                count = taskList[i].count;
+                priority = taskList[i].priority;
+                nextTask = &taskList[i];
             }
+            taskList[i].count++; // 增加调度计数  (Increase schedule counter)
         }
     }
-    while (nextTask == 0);
-
+    if (nextTask == 0)
+    {
+        nextTask = currentTask; // 如果没有就绪任务，继续运行当前任务 (If no ready task, continue running current task)
+    }
+    
     if(currentTask->state == TASK_RUNNING)
     {
         currentTask->state = TASK_READY;
@@ -87,8 +104,9 @@ void scheduler(void) {
 
     nextTask->state = TASK_RUNNING;
     nextTask->count = 0; // 重置下一个任务的调度计数 (Reset next task's schedule counter)
-    nextTask->time_slice = TIME_SLICE_DEFAULT; // 重置时间片计数器 (Reset time slice counter)
+    nextTask->time_slice = nextTask->time_slice_set; // 重置时间片计数器 (Reset time slice counter)
     currentTask = nextTask;
+    
 
 }
 
@@ -98,6 +116,7 @@ void os_start(void)
     {
         return; // 没有任务可运行 (No task to run)
     }
+    task_init(idle_task, PRIORITY_IDLE, TIME_SLICE_DEFAULT); // 初始化空闲任务 (Initialize idle task)
 
     HAL_NVIC_SetPriority(PendSV_IRQn, 0x04, 0); // 设置PendSV中断优先级为最低 (Set PendSV interrupt priority to lowest)
     HAL_NVIC_SetPriority(SysTick_IRQn, 0x03, 0); // 设置SysTick中断优先级高于PendSV (Set SysTick interrupt priority higher than PendSV)
@@ -105,11 +124,8 @@ void os_start(void)
     // 选择第一个任务作为当前任务 (Select the first task as current task)
     currentTask = &taskList[0];
     currentTask->state = TASK_RUNNING;
+    scheduler(); //调度一次，防止低优先级先运行
     switch_to_task(currentTask);
-}
-
-void switch_to_task(TaskControlBlock *tcb) {
-    switch_to_psp((uint32_t*)(tcb->stackPointer));  // 切换到指定任务的栈 (Switch to specified task's stack)
 }
 
 void task_delay(uint32_t ticks) {
