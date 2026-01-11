@@ -37,9 +37,9 @@ extern TaskControlBlock *nextTask;      // 下一个要运行的任务 (Next task to run)
 
 void task_init(TaskFunction task_func, uint8_t priority, uint32_t time_slice);
 void scheduler(void);
+void os_init(void);
 void os_start(void);
-extern __attribute__((naked,noreturn)) void switch_to_psp(uint32_t *psp_top);
-void switch_to_task(TaskControlBlock *tcb); 
+extern __attribute__((naked)) void switch_to_psp(uint32_t *psp_top);
 
 void task_delay(uint32_t ticks); // 任务延时函数 (Task delay function)
 #endif // __MYRTOS_H__

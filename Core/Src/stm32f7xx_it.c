@@ -144,6 +144,12 @@ void UsageFault_Handler(void)
 void SVC_Handler(void)
 {
   /* USER CODE BEGIN SVCall_IRQn 0 */
+  __asm volatile(
+    "mov r1, #2      \n"
+    "msr control, r1 \n"
+    "isb             \n"
+    "bx r14           \n"
+  );
 
   /* USER CODE END SVCall_IRQn 0 */
   /* USER CODE BEGIN SVCall_IRQn 1 */
@@ -210,7 +216,6 @@ void SysTick_Handler(void)
       if (--task->delay_ticks == 0)
       {
         task->state = TASK_READY;
-        
       }
     }
   }

@@ -23,6 +23,10 @@
 "myrtos\stm32f7xx_hal_uart_ex.o"
 "myrtos\system_stm32f7xx.o"
 "myrtos\myrtos.o"
+"myrtos\malloc.o"
+"myrtos\queue.o"
+"myrtos\sem.o"
+"myrtos\shm.o"
 --strict --scatter "MyRTOS\MyRTOS.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

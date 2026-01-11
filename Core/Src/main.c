@@ -61,42 +61,42 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN 0 */
 Semaphore sem_test;
 // task1  task2
-__attribute__((noreturn)) void task1(void) {
+void task1(void) {
     int loop = 0;
     unsigned char msg[50];
-    sem_init(&sem_test, 1); 
+    //sem_init(&sem_test, 1); 
     while(1) {
         loop++;
-        sem_wait(&sem_test); 
+        //sem_wait(&sem_test); 
         sprintf((char *)msg, "task1 acquired semaphore, loop=%d\n", loop);
         HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
-        sem_post(&sem_test); 
+        //sem_post(&sem_test); 
         task_delay(5000);
     }
 }
 
-__attribute__((noreturn)) void task2(void) {
+void task2(void) {
     int loop = 0;
     unsigned char msg[50];
     while(1) {
         loop++;
-        sem_wait(&sem_test); 
+        //sem_wait(&sem_test); 
         sprintf((char *)msg, "task2 acquired semaphore, loop=%d\n", loop);
         HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
-        sem_post(&sem_test); 
+        //sem_post(&sem_test); 
         task_delay(5000);
     }
 }
 
-__attribute__((noreturn)) void task3(void) {
+void task3(void) {
     int loop = 0;
     unsigned char msg[50];
     while(1) {
         loop++;
-        sem_wait(&sem_test); 
+        //sem_wait(&sem_test); 
         sprintf((char *)msg, "task3 acquired semaphore, loop=%d\n", loop);
         HAL_UART_Transmit(&huart1, msg, strlen((char *)msg), HAL_MAX_DELAY);
-        sem_post(&sem_test); 
+        //sem_post(&sem_test); 
         task_delay(5000);
     }
 }
@@ -136,7 +136,8 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  task_init(task1, PRIORITY_HIGH, 500);
+  os_init();
+  //task_init(task1, PRIORITY_HIGH, 500);
   task_init(task2, PRIORITY_MEDIUM, 500);
   task_init(task3, PRIORITY_LOW, 500);
   os_start();

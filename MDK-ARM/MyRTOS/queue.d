@@ -1,5 +1,5 @@
-myrtos/stm32f7xx_hal_cortex.o: \
-  ..\Drivers\STM32F7xx_HAL_Driver\Src\stm32f7xx_hal_cortex.c \
+myrtos/queue.o: ..\My_RTOS\queue.c ..\My_RTOS\queue.h \
+  D:\keil5\ARM\ARMCLANG\Bin\..\include\stdint.h ..\My_RTOS\port.h \
   ..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal.h \
   ..\Core\Inc\stm32f7xx_hal_conf.h \
   ..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_rcc.h \
@@ -7,7 +7,6 @@ myrtos/stm32f7xx_hal_cortex.o: \
   ..\Drivers\CMSIS\Device\ST\STM32F7xx\Include\stm32f7xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32F7xx\Include\stm32f767xx.h \
   ..\Drivers\CMSIS\Include\core_cm7.h \
-  D:\keil5\ARM\ARMCLANG\Bin\..\include\stdint.h \
   ..\Drivers\CMSIS\Include\cmsis_version.h \
   ..\Drivers\CMSIS\Include\cmsis_compiler.h \
   ..\Drivers\CMSIS\Include\cmsis_armclang.h \
@@ -31,4 +30,5 @@ myrtos/stm32f7xx_hal_cortex.o: \
   ..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_pwr.h \
   ..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_pwr_ex.h \
   ..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_uart.h \
-  ..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_uart_ex.h
+  ..\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_uart_ex.h \
+  D:\keil5\ARM\ARMCLANG\Bin\..\include\string.h
