@@ -1,8 +1,9 @@
 #include "os.h"
 
-void OS_PORT_SVC_Handler(void) {
+__attribute__((naked)) void OS_PORT_SVC_Handler(void) {
   __asm volatile("mov r1, #2      \n"
                  "msr control, r1 \n"
+                 "mov r14, 0xFFFFFFFD \n"
                  "isb             \n"
                  "bx r14           \n");
 }
@@ -14,9 +15,7 @@ void OS_PORT_PendSV_Handler(void) {
                  "ldr     r2, [r1] \n"
                  "str     r0, [r2] \n"
 
-                 "cpsie i        \n"
                  "bl      os_scheduler \n"
-                 "cpsid i        \n"
                  "mov r14, 0xFFFFFFFD \n"
 
                  "ldr     r1, =os_currentTask \n"
@@ -34,8 +33,11 @@ void OS_PORT_SysTick_Handler(void) {
   for (int i = 0; i < os_taskCount; i++) {
     os_tcb_t *task = &os_task_list[i];
     if (task->delay_ticks > 0) {
-      if (--task->delay_ticks == 0)
+      if (--task->delay_ticks == 0) {
         task->state = OS_TASK_READY;
+        if (os_currentTask->priority < task->priority)
+          OS_YIELD_FROM_ISR();
+      }
     }
   }
 
