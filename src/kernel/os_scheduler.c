@@ -1,14 +1,15 @@
 #include "os.h"
 
 void os_scheduler(void) {
+  os_int32_t indexcount = os_taskCount;
   os_int32_t count = 0;
   os_uint8_t priority = os_currentTask->priority;
   os_tcb_t *nextTask = 0;
 
-  if (os_taskCount == 0)
+  if (indexcount == 0)
     return;
 
-  for (int i = 0; i < os_taskCount; i++) {
+  for (os_int32_t i = 0; i < indexcount; i++) {
     if (os_task_list[i].state == OS_TASK_READY) {
       if (os_task_list[i].count >= count &&
           os_task_list[i].priority >= priority) {
@@ -18,6 +19,9 @@ void os_scheduler(void) {
       }
       os_task_list[i].count++;
     }
+    // If task is deleted, skip it
+    if (os_task_list[i].state == OS_TASK_DELETED)
+      indexcount++;
   }
 
   // If no suitable task found, continue with current task or idle task

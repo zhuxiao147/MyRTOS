@@ -1,9 +1,9 @@
 #ifndef __OS_IPC_H__
 #define __OS_IPC_H__
 
-#include "os_mutex.h"
-#include "os_semaphore.h"
-#include "os_queue.h"
-#include "os_shm.h"
+#include "../ipc/os_mutex.h"
+#include "../ipc/os_semphr.h"
+#include "../ipc/os_queue.h"
+#include "../ipc/os_shm.h"
 
 #endif

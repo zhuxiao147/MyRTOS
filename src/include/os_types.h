@@ -22,7 +22,8 @@ typedef enum {
 
 /* 任务状态 */
 typedef enum {
-  OS_TASK_READY = 0,
+  OS_TASK_DELETED = 0,
+  OS_TASK_READY,
   OS_TASK_RUNNING,
   OS_TASK_BLOCKED,
   OS_TASK_SUSPENDED
@@ -34,6 +35,7 @@ typedef struct {
   os_uint32_t time_slice_set; // 设置的时间片长度 (Set time slice)
   os_uint32_t delay_ticks;    // 延时计数器 (Delay counter)
   os_int32_t count;           // 用于调度的计数器 (Counter for scheduling)
+  os_uint32_t id;             // 任务ID (Task ID)
   os_task_state_t state;      // 任务状态 (Task state)
   os_priority_t priority;     // 任务优先级 (Task priority)
 } os_tcb_t;
