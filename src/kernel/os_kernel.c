@@ -1,6 +1,6 @@
 #include "os.h"
 
-__attribute__((naked)) void switch_to_psp(os_uint32_t *psp) {
+__attribute__((naked)) void first_to_psp(os_uint32_t *psp) {
   __asm volatile("ldmia   r0!, {r4-r11} \n"
                  "msr psp, r0     \n"
                  "svc 0           \n");
@@ -25,5 +25,5 @@ void os_start(void) {
   os_currentTask->state = OS_TASK_RUNNING;
   // shcheduler first time
   os_scheduler();
-  switch_to_psp(os_currentTask->stackPointer);
+  first_to_psp(os_currentTask->stackPointer);
 }

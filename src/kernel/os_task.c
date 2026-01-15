@@ -1,12 +1,12 @@
 #include "os.h"
 #include <string.h>
 
-os_tcb_t os_task_list[MAX_TASKS];
-os_uint32_t os_task_stack[MAX_TASKS][OS_TASK_STACK_SIZE]
+volatile os_tcb_t os_task_list[MAX_TASKS];
+volatile os_uint32_t os_task_stack[MAX_TASKS][OS_TASK_STACK_SIZE]
     __attribute__((aligned(8))) = {0};
 
-os_uint32_t os_taskCount = 0;
-os_tcb_t *os_currentTask = 0;
+volatile os_uint32_t os_taskCount = 0;
+volatile os_tcb_t *os_currentTask = 0;
 
 os_uint32_t os_task_create(TaskFunction task_func, os_priority_t priority,
                            os_uint32_t time_slice) {
@@ -22,6 +22,7 @@ os_uint32_t os_task_create(TaskFunction task_func, os_priority_t priority,
     }
   }
   if (index == -1) {
+    OS_ENABLE_INTERRUPTS();
     return OS_TASK_INVALID_ID;
   }
 
@@ -57,10 +58,11 @@ os_uint32_t os_task_create(TaskFunction task_func, os_priority_t priority,
 os_bool_t os_task_delete(os_uint32_t task_id) {
 
   OS_DISABLE_INTERRUPTS();
-  if (task_id >= os_taskCount || task_id == 0 ||
+  if (task_id >= MAX_TASKS || task_id == 0 ||
       os_task_list[task_id].state == OS_TASK_DELETED ||
       os_task_list[task_id].state == OS_TASK_RUNNING ||
       os_task_list[task_id].state == OS_TASK_BLOCKED) {
+    OS_ENABLE_INTERRUPTS();
     return OS_FALSE;
   }
   // Mark task as deleted
