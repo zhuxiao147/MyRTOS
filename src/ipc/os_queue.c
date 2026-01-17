@@ -1,52 +1,54 @@
 #include "os_queue.h"
+
 #include "port.h"
+
 #include <string.h>
 
-// ³õÊ¼»¯¶ÓÁÐ (Initialize queue)
+// åˆå§‹åŒ–é˜Ÿåˆ— (Initialize queue)
 void os_queue_init(os_message_queue_t *queue) {
-  OS_DISABLE_INTERRUPTS();
-  queue->head = 0;
-  queue->tail = 0;
-  memset(queue->data, 0, sizeof(queue->data));
-  OS_ENABLE_INTERRUPTS();
+    OS_DISABLE_INTERRUPTS();
+    queue->head = 0;
+    queue->tail = 0;
+    memset(queue->data, 0, sizeof(queue->data));
+    OS_ENABLE_INTERRUPTS();
 }
 
-// ÅÐ¶Ï¶ÓÁÐÊÇ·ñÎª¿Õ (Check if queue is empty)
+// åˆ¤æ–­é˜Ÿåˆ—æ˜¯å¦ä¸ºç©º (Check if queue is empty)
 os_bool_t os_queue_isempty(os_message_queue_t *queue) {
-  return (queue->head == queue->tail);
+    return (queue->head == queue->tail);
 }
 
-// ÅÐ¶Ï¶ÓÁÐÊÇ·ñÎªÂú (Check if queue is full)
+// åˆ¤æ–­é˜Ÿåˆ—æ˜¯å¦ä¸ºæ»¡ (Check if queue is full)
 os_bool_t os_queue_isfull(os_message_queue_t *queue) {
-  return ((queue->tail + 1) % QUEUE_SIZE == queue->head);
+    return ((queue->tail + 1) % QUEUE_SIZE == queue->head);
 }
 
-// ·¢ËÍÏûÏ¢µ½¶ÓÁÐ (Send message to queue)
-// ·µ»Ø1±íÊ¾³É¹¦£¬0±íÊ¾¶ÓÁÐÒÑÂú (Return 1 for success, 0 for full)
+// å‘é€æ¶ˆæ¯åˆ°é˜Ÿåˆ— (Send message to queue)
+// è¿”å›ž1è¡¨ç¤ºæˆåŠŸï¼Œ0è¡¨ç¤ºé˜Ÿåˆ—å·²æ»¡ (Return 1 for success, 0 for full)
 os_uint32_t os_queue_send(os_message_queue_t *queue, const char *message) {
-  os_uint32_t ret = 0;
-  OS_DISABLE_INTERRUPTS();
-  if (!os_queue_isfull(queue)) {
-    strncpy(queue->data[queue->tail], message, MESSAGE_SIZE - 1);
-    queue->data[queue->tail][MESSAGE_SIZE - 1] = '\0';
-    queue->tail = (queue->tail + 1) % QUEUE_SIZE;
-    ret = 1;
-  }
-  OS_ENABLE_INTERRUPTS();
-  return ret;
+    os_uint32_t ret = 0;
+    OS_DISABLE_INTERRUPTS();
+    if (!os_queue_isfull(queue)) {
+        strncpy(queue->data[queue->tail], message, MESSAGE_SIZE - 1);
+        queue->data[queue->tail][MESSAGE_SIZE - 1] = '\0';
+        queue->tail = (queue->tail + 1) % QUEUE_SIZE;
+        ret = 1;
+    }
+    OS_ENABLE_INTERRUPTS();
+    return ret;
 }
 
-// ´Ó¶ÓÁÐ½ÓÊÕÏûÏ¢ (Receive message from queue)
-// ·µ»Ø1±íÊ¾³É¹¦£¬0±íÊ¾¶ÓÁÐÎª¿Õ (Return 1 for success, 0 for empty)
+// ä»Žé˜Ÿåˆ—æŽ¥æ”¶æ¶ˆæ¯ (Receive message from queue)
+// è¿”å›ž1è¡¨ç¤ºæˆåŠŸï¼Œ0è¡¨ç¤ºé˜Ÿåˆ—ä¸ºç©º (Return 1 for success, 0 for empty)
 os_uint32_t os_queue_receive(os_message_queue_t *queue, char *buffer) {
-  os_uint32_t ret = 0;
-  OS_DISABLE_INTERRUPTS();
-  if (!os_queue_isempty(queue)) {
-    strncpy(buffer, queue->data[queue->head], MESSAGE_SIZE);
-    buffer[MESSAGE_SIZE - 1] = '\0';
-    queue->head = (queue->head + 1) % QUEUE_SIZE;
-    ret = 1;
-  }
-  OS_ENABLE_INTERRUPTS();
-  return ret;
+    os_uint32_t ret = 0;
+    OS_DISABLE_INTERRUPTS();
+    if (!os_queue_isempty(queue)) {
+        strncpy(buffer, queue->data[queue->head], MESSAGE_SIZE);
+        buffer[MESSAGE_SIZE - 1] = '\0';
+        queue->head = (queue->head + 1) % QUEUE_SIZE;
+        ret = 1;
+    }
+    OS_ENABLE_INTERRUPTS();
+    return ret;
 }

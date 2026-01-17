@@ -1,6 +1,8 @@
 #ifndef __OS_TYPES_H__
 #define __OS_TYPES_H__
 
+#define OS_UINT32_MAX 0xFFFFFFFFU
+
 typedef signed char os_int8_t;
 typedef short os_int16_t;
 typedef int os_int32_t;
@@ -12,32 +14,34 @@ typedef unsigned long long os_uint64_t;
 
 typedef enum { OS_FALSE = 0, OS_TRUE = 1 } os_bool_t;
 
-// ÈÎÎñÓÅÏÈ¼¶ (Task priority)
+typedef unsigned int os_task_handle_t;
+
+// ä»»åŠ¡ä¼˜å…ˆçº§ (Task priority)
 typedef enum {
-  OS_PRIORITY_IDLE = 0,
-  OS_PRIORITY_LOW = 1,
-  OS_PRIORITY_MEDIUM = 2,
-  OS_PRIORITY_HIGH = 3
+    OS_PRIORITY_IDLE = 0,
+    OS_PRIORITY_LOW = 1,
+    OS_PRIORITY_MEDIUM = 2,
+    OS_PRIORITY_HIGH = 3
 } os_priority_t;
 
-/* ÈÎÎñ×´Ì¬ */
+/* ä»»åŠ¡çŠ¶æ€ */
 typedef enum {
-  OS_TASK_DELETED = 0,
-  OS_TASK_READY,
-  OS_TASK_RUNNING,
-  OS_TASK_BLOCKED,
-  OS_TASK_SUSPENDED
+    OS_TASK_DELETED = 0,
+    OS_TASK_READY,
+    OS_TASK_RUNNING,
+    OS_TASK_BLOCKED,
+    OS_TASK_SUSPENDED
 } os_task_state_t;
 
 typedef struct {
-  os_uint32_t *stackPointer;  // ÈÎÎñµÄÕ»Ö¸Õë (Task stack pointer)
-  os_uint32_t time_slice;     // Ê±¼äÆ¬¼ÆÊı (Time slice counter)
-  os_uint32_t time_slice_set; // ÉèÖÃµÄÊ±¼äÆ¬³¤¶È (Set time slice)
-  os_uint32_t delay_ticks;    // ÑÓÊ±¼ÆÊıÆ÷ (Delay counter)
-  os_int32_t count;           // ÓÃÓÚµ÷¶ÈµÄ¼ÆÊıÆ÷ (Counter for scheduling)
-  os_uint32_t id;             // ÈÎÎñID (Task ID)
-  os_task_state_t state;      // ÈÎÎñ×´Ì¬ (Task state)
-  os_priority_t priority;     // ÈÎÎñÓÅÏÈ¼¶ (Task priority)
+    os_uint32_t *stackPointer;  // ä»»åŠ¡çš„æ ˆæŒ‡é’ˆ (Task stack pointer)
+    os_uint32_t time_slice;     // æ—¶é—´ç‰‡è®¡æ•° (Time slice counter)
+    os_uint32_t time_slice_set; // è®¾ç½®çš„æ—¶é—´ç‰‡é•¿åº¦ (Set time slice)
+    os_uint32_t delay_ticks;    // å»¶æ—¶è®¡æ•°å™¨ (Delay counter)
+    os_int32_t scheduler_count; // ç”¨äºè°ƒåº¦çš„è®¡æ•°å™¨ (Counter for scheduling)
+    os_uint32_t id;             // ä»»åŠ¡ID (Task ID)
+    os_task_state_t state;      // ä»»åŠ¡çŠ¶æ€ (Task state)
+    os_priority_t priority;     // ä»»åŠ¡ä¼˜å…ˆçº§ (Task priority)
 } os_tcb_t;
 
 typedef void (*TaskFunction)(void); // Task function pointer type

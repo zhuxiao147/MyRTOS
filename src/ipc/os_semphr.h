@@ -4,19 +4,19 @@
 #include "os_types.h"
 
 typedef struct {
-  os_int32_t value; // ĞÅºÅÁ¿µÄÖµ (Value of semaphore)
+    os_int32_t value; // ä¿¡å·é‡çš„å€¼ (Value of semaphore)
 } os_semaphore_t;
 
-// ³õÊ¼»¯ĞÅºÅÁ¿ (Initialize semaphore)
+// åˆå§‹åŒ–ä¿¡å·é‡ (Initialize semaphore)
 void os_sem_init(os_semaphore_t *sem, os_int32_t value);
 
-// µÈ´ı£¨P²Ù×÷£© (Wait (P operation))
+// ç­‰å¾…ï¼ˆPæ“ä½œï¼‰ (Wait (P operation))
 void os_sem_wait(os_semaphore_t *sem);
 
-// ÊÍ·Å£¨V²Ù×÷£© (Post (V operation))
+// é‡Šæ”¾ï¼ˆVæ“ä½œï¼‰ (Post (V operation))
 void os_sem_post(os_semaphore_t *sem);
 
-// »ñÈ¡ĞÅºÅÁ¿µÄµ±Ç°Öµ (Get current value of semaphore)
+// è·å–ä¿¡å·é‡çš„å½“å‰å€¼ (Get current value of semaphore)
 os_int32_t os_sem_getvalue(os_semaphore_t *sem);
 
 #endif // __OS_SEMPHR_H__

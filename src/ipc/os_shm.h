@@ -3,25 +3,24 @@
 
 #include "os_types.h"
 
-// ¹²ÏíÄÚ´æ½á¹¹Ìå (Shared memory structure)
+// å…±äº«å†…å­˜ç»“æ„ä½“ (Shared memory structure)
 typedef struct {
-  void *buffer;        // Ö¸Ïò¹²ÏíÄÚ´æµÄÖ¸Õë (Pointer to shared memory)
-  os_uint32_t size;    // ¹²ÏíÄÚ´æ´óĞ¡ (Shared memory size)
-  os_bool_t is_locked; // ¼òµ¥»¥³âËø±êÖ¾ (Simple mutex lock flag)
+    void *buffer;        // æŒ‡å‘å…±äº«å†…å­˜çš„æŒ‡é’ˆ (Pointer to shared memory)
+    os_uint32_t size;    // å…±äº«å†…å­˜å¤§å° (Shared memory size)
+    os_bool_t is_locked; // ç®€å•äº’æ–¥é”æ ‡å¿— (Simple mutex lock flag)
 } os_share_memory_t;
 
-// ³õÊ¼»¯¹²ÏíÄÚ´æ (Initialize shared memory)
+// åˆå§‹åŒ–å…±äº«å†…å­˜ (Initialize shared memory)
 void os_shm_init(os_share_memory_t *shm, void *buffer, os_uint32_t size);
-// Ğ´Èë¹²ÏíÄÚ´æ (Write to shared memory)
-os_bool_t os_shm_write(os_share_memory_t *shm, const void *src,
-                       os_uint32_t size, os_uint32_t offset);
-// ´Ó¹²ÏíÄÚ´æ¶ÁÈ¡ (Read from shared memory)
-os_bool_t os_shm_read(os_share_memory_t *shm, void *dst, os_uint32_t size,
-                      os_uint32_t offset);
-// ÉÏËø (Lock)
+// å†™å…¥å…±äº«å†…å­˜ (Write to shared memory)
+os_bool_t os_shm_write(os_share_memory_t *shm, const void *src, os_uint32_t size,
+                       os_uint32_t offset);
+// ä»å…±äº«å†…å­˜è¯»å– (Read from shared memory)
+os_bool_t os_shm_read(os_share_memory_t *shm, void *dst, os_uint32_t size, os_uint32_t offset);
+// ä¸Šé” (Lock)
 void os_shm_lock(os_share_memory_t *shm);
-// ½âËø (Unlock)
+// è§£é” (Unlock)
 void os_shm_unlock(os_share_memory_t *shm);
-// ÅĞ¶ÏÊÇ·ñÉÏËø (Check if locked)
+// åˆ¤æ–­æ˜¯å¦ä¸Šé” (Check if locked)
 os_bool_t os_shm_is_locked(os_share_memory_t *shm);
 #endif // __OS_SHM_H__

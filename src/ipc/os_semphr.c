@@ -1,29 +1,32 @@
 #include "os_semphr.h"
+
 #include "port.h"
 
-// ³õÊ¼»¯ÐÅºÅÁ¿ (Initialize semaphore)
+// åˆå§‹åŒ–ä¿¡å·é‡ (Initialize semaphore)
 void os_sem_init(os_semaphore_t *sem, os_int32_t value) {
-  OS_DISABLE_INTERRUPTS();
-  sem->value = value;
-  OS_ENABLE_INTERRUPTS();
+    OS_DISABLE_INTERRUPTS();
+    sem->value = value;
+    OS_ENABLE_INTERRUPTS();
 }
 
-// µÈ´ý£¨P²Ù×÷£© (Wait (P operation))
+// ç­‰å¾…ï¼ˆPæ“ä½œï¼‰  (P operation))
 void os_sem_wait(os_semaphore_t *sem) {
-  while (sem->value <= 0)
-    ; // ×ÔÐýµÈ´ý (Spin wait)
+    while (sem->value <= 0)
+        ; // è‡ªæ—‹ç­‰å¾… (Spin wait)
 
-  OS_DISABLE_INTERRUPTS();
-  sem->value--;
-  OS_ENABLE_INTERRUPTS();
+    OS_DISABLE_INTERRUPTS();
+    sem->value--;
+    OS_ENABLE_INTERRUPTS();
 }
 
-// ÊÍ·Å£¨V²Ù×÷£© (Post (V operation))
+// é‡Šæ”¾ï¼ˆVæ“ä½œï¼‰  (V operation))
 void os_sem_post(os_semaphore_t *sem) {
-  OS_DISABLE_INTERRUPTS();
-  sem->value++;
-  OS_ENABLE_INTERRUPTS();
+    OS_DISABLE_INTERRUPTS();
+    sem->value++;
+    OS_ENABLE_INTERRUPTS();
 }
 
-// »ñÈ¡ÐÅºÅÁ¿µÄµ±Ç°Öµ (Get current value of semaphore)
-os_int32_t os_sem_getvalue(os_semaphore_t *sem) { return sem->value; }
+// èŽ·å–ä¿¡å·é‡çš„å½“å‰å€¼ (Get current value of semaphore)
+os_int32_t os_sem_getvalue(os_semaphore_t *sem) {
+    return sem->value;
+}
