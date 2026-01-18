@@ -6,11 +6,11 @@
 #define QUEUE_SIZE 5
 #define MESSAGE_SIZE 32
 
-// 消息队列结构 (Message queue structure)
+// Message queue structure
 typedef struct {
-    char data[QUEUE_SIZE][MESSAGE_SIZE]; // 消息存储区 (Message storage area)
-    int head;                            // 队头 (Queue head)
-    int tail;                            // 队尾 (Queue tail)
+    char data[QUEUE_SIZE][MESSAGE_SIZE]; // Message storage area
+    int head;                            // Queue head
+    int tail;                            // Queue tail
 } os_message_queue_t;
 
 void os_queue_init(os_message_queue_t *queue);
